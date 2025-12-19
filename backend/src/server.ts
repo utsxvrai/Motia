@@ -13,8 +13,15 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+// Allow both with and without trailing slash to be safe
+const allowedOrigins = [
+  clientUrl,
+  clientUrl.endsWith('/') ? clientUrl.slice(0, -1) : `${clientUrl}/`
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
