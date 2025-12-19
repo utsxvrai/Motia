@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import dotenv from 'dotenv';
-dotenv.config();
+
 
 interface SignupRequest {
   email: string;
