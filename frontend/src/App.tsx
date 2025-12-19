@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import dotenv from 'dotenv';
+dotenv.config();
 
 interface SignupRequest {
   email: string;
@@ -49,6 +51,9 @@ function App() {
   const [stepLogs, setStepLogs] = useState<LogEntry[]>([]);
   const [metrics, setMetrics] = useState<any>(null);
 
+  // API URL from environment variables
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
   // Check for verification token in URL on mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -82,7 +87,7 @@ function App() {
 
   const fetchMetrics = async () => {
     try {
-      const response = await fetch('/api/metrics');
+      const response = await fetch(`${API_URL}/api/metrics`);
       if (response.ok) {
         const data = await response.json();
         setMetrics(data);
@@ -144,7 +149,7 @@ function App() {
 
   const fetchWorkflow = async (id: string) => {
     try {
-      const response = await fetch(`/api/workflows/${id}`);
+      const response = await fetch(`${API_URL}/api/workflows/${id}`);
       if (response.ok) {
         const data = await response.json();
         setWorkflow(data);
@@ -156,7 +161,7 @@ function App() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/users');
+      const response = await fetch(`${API_URL}/api/users`);
       if (response.ok) {
         const data = await response.json();
         setUsers(data.users || []);
@@ -175,7 +180,7 @@ function App() {
     setVerificationStatus({ status: 'idle', message: '' });
 
     try {
-      const response = await fetch('/api/signup', {
+      const response = await fetch(`${API_URL}/api/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -201,7 +206,7 @@ function App() {
     setVerificationStatus({ status: 'verifying', message: 'Verifying email...' });
 
     try {
-      const response = await fetch(`/api/verify?token=${token}`);
+      const response = await fetch(`${API_URL}/api/verify?token=${token}`);
       const data = await response.json();
       
       if (response.ok) {
